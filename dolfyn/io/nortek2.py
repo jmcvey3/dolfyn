@@ -475,7 +475,7 @@ def reorg(dat):
     tmp = lib.status2data(outdat.sys.status)  # returns a dict
     outdat.orient['orient_up'] = tmp['orient_up']
     # 0: XUP, 1: XDOWN, 4: ZUP, 5: ZDOWN
-    # Heding is: 0,1: Z; 4,5: X
+    # Heading is: 0,1: Z; 4,5: X
     for ky in ['accel', 'angrt']:
         for dky in outdat['orient'].keys():
             if dky == ky or dky.startswith(ky + '_'):
@@ -506,16 +506,16 @@ def reduce(data):
     for ky in ['heading', 'pitch', 'roll']:
         lib.reduce_by_average_angle(data['orient'], ky, ky + '_b5')
 
-    data['range'] = (np.arange(data['vel'].shape[1]) *
+    data['range'] = ((np.arange(data['vel'].shape[1])+1) *
                      data['config']['cell_size'] +
                      data['config']['blanking'])
     if 'vel_b5' in data:
-        data['range_b5'] = (np.arange(data['vel_b5'].shape[1]) *
+        data['range_b5'] = ((np.arange(data['vel_b5'].shape[1])+1) *
                             data['config']['cell_size_b5'] +
                             data['config']['blanking_b5'])
     if 'echo_echo' in data:
         data['echo'] = data.pop('echo_echo')
-        data['range_echo'] = (np.arange(data['echo'].shape[0]) *
+        data['range_echo'] = ((np.arange(data['echo'].shape[0])+1) *
                               data['config']['cell_size_echo'] +
                               data['config']['blanking_echo'])
 
