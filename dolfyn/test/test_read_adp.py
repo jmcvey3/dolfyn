@@ -6,22 +6,22 @@ import numpy as np
 from xarray.testing import assert_identical
 warnings.simplefilter('ignore', UserWarning)
 
-load = tb.load
-save = tb.save
+load = tb.load_ncdata
+save = tb.save_ncdata
 
-dat_rdi = load('data/RDI_test01.nc')
-dat_rdi_bt = load('data/RDI_withBT.nc')
-dat_rdi_i = load('data/RDI_test01_rotate_beam2inst.nc')
-dat_awac = load('data/AWAC_test01.nc')
-dat_awac_ud = load('data/AWAC_test01_ud.nc')
-dat_sig = load('data/BenchFile01.nc')
-dat_sig_i = load('data/Sig1000_IMU.nc')
-dat_sig_i_ud = load('data/Sig1000_IMU_ud.nc')
-dat_sig_ieb = load('data/VelEchoBT01.nc')
-#dat_sig_ie = load('data/Sig500_Echo.nc')
-#dat_sig_vm = load('data/SigVM1000.nc')
-dat_wr1 = load('data/winriver01.nc')
-dat_wr2 = load('data/winriver02.nc')
+dat_rdi = load('RDI_test01.nc')
+dat_rdi_bt = load('RDI_withBT.nc')
+dat_rdi_i = load('RDI_test01_rotate_beam2inst.nc')
+dat_awac = load('AWAC_test01.nc')
+dat_awac_ud = load('AWAC_test01_ud.nc')
+dat_sig = load('BenchFile01.nc')
+dat_sig_i = load('Sig1000_IMU.nc')
+dat_sig_i_ud = load('Sig1000_IMU_ud.nc')
+dat_sig_ieb = load('VelEchoBT01.nc')
+#dat_sig_ie = load('Sig500_Echo.nc')
+#dat_sig_vm = load('SigVM1000.nc')
+dat_wr1 = load('winriver01.nc')
+dat_wr2 = load('winriver02.nc')
 
 
 def test_badtime():
@@ -55,19 +55,19 @@ def test_read(make_data=False):
     # td_wr2['orient'].pop('raw')
 
     if make_data:
-        #dlfn.save(dlfn.read_example('RDI_test01.000'),'data/RDI_test01.nc')
-        save(td_rdi_orientraw, 'data/RDI_test01.nc')
-        save(td_rdi_bt, 'data/RDI_withBT.nc')
-        save(td_sig, 'data/BenchFile01.nc')
-        save(td_sig_i, 'data/Sig1000_IMU.nc')
-        save(td_sig_i_ud, 'data/Sig1000_IMU_ud.nc')
-        save(td_sig_ieb, 'data/VelEchoBT01.nc')
-        #save(td_sig_ie, 'data/Sig500_Echo.nc')
-        #save(td_sig_vm, 'data/SigVM1000.nc')
-        save(td_awac, 'data/AWAC_test01.nc')
-        save(td_awac_ud, 'data/AWAC_test01_ud.nc')
-        save(td_wr1, 'data/winriver01.nc')
-        save(td_wr2, 'data/winriver02.nc')
+        #dlfn.save(dlfn.read_example('RDI_test01.000'),'RDI_test01.nc')
+        save(td_rdi_orientraw, 'RDI_test01.nc')
+        save(td_rdi_bt, 'RDI_withBT.nc')
+        save(td_sig, 'BenchFile01.nc')
+        save(td_sig_i, 'Sig1000_IMU.nc')
+        save(td_sig_i_ud, 'Sig1000_IMU_ud.nc')
+        save(td_sig_ieb, 'VelEchoBT01.nc')
+        #save(td_sig_ie, 'Sig500_Echo.nc')
+        #save(td_sig_vm, 'SigVM1000.nc')
+        save(td_awac, 'AWAC_test01.nc')
+        save(td_awac_ud, 'AWAC_test01_ud.nc')
+        save(td_wr1, 'winriver01.nc')
+        save(td_wr2, 'winriver02.nc')
         return
     
     assert_identical(td_rdi, dat_rdi)
