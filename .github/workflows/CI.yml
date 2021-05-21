@@ -24,8 +24,9 @@ jobs:
       - name: Install dependencies
         run:
           python -m pip install --upgrade pip
-          pip install numpy scipy xarray six pytest coveralls
-          python setup.py install
+          pip install -e git://github.com/lkilcher/pyDictH5.git@master#egg=pyDictH5
+          pip install numpy scipy xarray six h5py h5netcdf pytest coveralls
       - name: Run tests
         run:
+          cd dolfyn/test
           python -m pytest
