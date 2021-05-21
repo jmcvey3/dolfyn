@@ -26,7 +26,7 @@ dat_wr2 = load('data/winriver02.nc')
 
 def test_badtime():
     dat = read('Sig1000_BadTime01.ad2cp')
-    assert np.isnan(dat.time[199]), \
+    assert dat.time[199].isnull(), \
     "A good timestamp was found where a bad value is expected."
 
 

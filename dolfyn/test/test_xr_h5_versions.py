@@ -50,7 +50,7 @@ def load_data(filename, ext):
         return load_h5(filename + ext)
 
 
-def test_data(f_names):
+def test_data():
     for ky in f_names:
         ds = load_data(ky, '.nc')
         h5 = load_data(ky, '.h5')
@@ -66,5 +66,5 @@ def test_data(f_names):
 
 
 if __name__=='__main__':
-    test_data(f_names)
+    test_data()
     

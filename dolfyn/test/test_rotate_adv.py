@@ -45,10 +45,10 @@ def test_inst2head_rotmat():
     # Validation for non-symmetric rotations
     td = tr.dat.copy(deep=True)
     R = euler2orient(20, 30, 60, units='degrees') # arbitrary angles
-    td = td.Veldata.set_inst2head_rotmat(R.T)
+    td = td.Veldata.set_inst2head_rotmat(R)
     vel1 = td.vel
     # validate that a head->inst rotation occurs (transpose of inst2head_rotmat)
-    vel2 = np.dot(R.T, tr.dat.vel)
+    vel2 = np.dot(R, tr.dat.vel)
     #assert (vel1 == vel2).all(), "head->inst rotations give unexpeced results."
     assert_ac(vel1.values, vel2)
     
@@ -87,8 +87,8 @@ def test_rotate_earth2inst():
     cdm = tr.dat_imu.copy(deep=True)
     # The heading/pitch/roll data gets modified during rotation, so it
     # doesn't go back to what it was.
-    cdm = cdm.drop(['heading','pitch','roll'])
-    tdm = tdm.drop(['heading','pitch','roll'])
+    cdm = cdm.drop_vars(['heading','pitch','roll'])
+    tdm = tdm.drop_vars(['heading','pitch','roll'])
 
     # msg = "adv.rotate.inst2earth gives unexpected REVERSE results for {}"
     # for t, c, msg in (
