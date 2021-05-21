@@ -113,7 +113,7 @@ def load(filename):
     if filename[-3:] != '.nc':
         filename += '.nc'
         
-    ds = xr.load_dataset(filename)
+    ds = xr.load_dataset(filename, engine='h5netcdf')
     
     # xarray converts single list items to ints or strings
     if hasattr(ds, 'rotate_vars') and type(ds.rotate_vars) is not list:

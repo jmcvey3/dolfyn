@@ -25,7 +25,7 @@ jobs:
         run:
           python -m pip install --upgrade pip
           pip install -e git://github.com/lkilcher/pyDictH5.git@master#egg=pyDictH5
-          pip install numpy scipy xarray six netcdf4 h5netcdf pytest coveralls
+          pip install numpy scipy xarray six h5netcdf pytest coveralls
       - name: Run tests
         run:
           python -m pytest
