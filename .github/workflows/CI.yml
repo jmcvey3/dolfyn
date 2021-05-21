@@ -28,5 +28,4 @@ jobs:
           pip install numpy scipy xarray six h5py h5netcdf pytest coveralls
       - name: Run tests
         run:
-          cd dolfyn/test
           python -m pytest
