@@ -3,7 +3,6 @@ from dolfyn import rotate2 as rotate, calc_principal_heading
 from dolfyn.test.base import load, save
 from dolfyn.rotate.base import euler2orient
 import numpy as np
-from nose.tools import raises
 from xarray.testing import assert_allclose
 from numpy.testing import assert_allclose as assert_ac
 
