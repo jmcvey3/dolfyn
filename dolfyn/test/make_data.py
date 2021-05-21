@@ -6,23 +6,23 @@ set.
 """
 print(__doc__)
 
-# import test_adv as advt
-# import test_rotate_adv as advro
-# import test_read_adp as adpr
-# import test_rotate_adp as adpro
+import test_adv as advt
+import test_rotate_adv as advro
+import test_read_adp as adpr
+import test_rotate_adp as adpro
 
 
-# advt.test_read(make_data=True)
-# advt.test_motion(make_data=True)
-# advt.test_heading(make_data=True)
-# advt.test_turbulence(make_data=True)
-# advt.test_clean(make_data=True)
-# advro.test_rotate_inst2beam(make_data=True)
-# advro.test_rotate_inst2earth(make_data=True)
-# advro.test_rotate_earth2principal(make_data=True)
+advt.test_read(make_data=True)
+advt.test_motion(make_data=True)
+advt.test_heading(make_data=True)
+advt.test_turbulence(make_data=True)
+advt.test_clean(make_data=True)
+advro.test_rotate_inst2beam(make_data=True)
+advro.test_rotate_inst2earth(make_data=True)
+advro.test_rotate_earth2principal(make_data=True)
 
-# adpr.test_read(make_data=True)
-# adpro.test_rotate_beam2inst(make_data=True)
-# adpro.test_rotate_inst2earth(make_data=True)
-# adpro.test_rotate_inst2beam(make_data=True)
-# adpro.test_rotate_earth2principal(make_data=True)
+adpr.test_read(make_data=True)
+adpro.test_rotate_beam2inst(make_data=True)
+adpro.test_rotate_inst2earth(make_data=True)
+adpro.test_rotate_inst2beam(make_data=True)
+adpro.test_rotate_earth2principal(make_data=True)
