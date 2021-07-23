@@ -1,9 +1,0 @@
-name: dolfyn
-dependencies:
-    - python=3.6
-    - numpy
-    - scipy
-    - xarray
-    - six
-    - sphinx
-    - pip

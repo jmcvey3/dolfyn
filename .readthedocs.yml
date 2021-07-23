@@ -3,7 +3,7 @@ sphinx:
     configuration: doc-src/conf.py
 
 conda:
-    file: doc-src/environment.yml
+    file: environment.yml
 
 python:
     version: 3
