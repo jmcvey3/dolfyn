@@ -6,7 +6,6 @@ import dolfyn.io.nortek2 as sig
 import warnings
 import os, sys
 import unittest
-import pytest
 from xarray.testing import assert_allclose, assert_identical
 
 load = tb.load_ncdata
@@ -38,7 +37,6 @@ def test_badtime():
     "A good timestamp was found where a bad value is expected."
 
 
-@pytest.mark.filterwarnings('ignore::UserWarning')
 def test_io_rdi(make_data=False):
     nens = 500
     td_rdi = tb.drop_config(read('RDI_test01.000'))
