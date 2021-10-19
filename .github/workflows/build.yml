@@ -31,15 +31,16 @@ jobs:
         
     - name: Update and install packages
       run: |
-        python -m pip install --upgrade pip wheel
-        pip install nose
+        python3 -m pip install --upgrade pip wheel
+        pip install pytest
         pip install coveralls
         pip install .
 
     - name: Run tests
       shell: bash -l {0}
       run: |          
-        nosetests -v --with-coverage --cover-package=dolfyn dolfyn
+        #nosetests -v --with-coverage --cover-package=dolfyn dolfyn
+        coverage run -m pytest
 
     - name: Upload coverage data to coveralls.io
       run: |
@@ -57,7 +58,7 @@ jobs:
     steps:
     - name: Finished
       run: |
-        pip3 install --upgrade coveralls
+        pip install --upgrade coveralls
         coveralls --finish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
