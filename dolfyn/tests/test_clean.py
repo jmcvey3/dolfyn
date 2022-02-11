@@ -1,6 +1,6 @@
-from . import test_read_adv as tv
-from . import test_read_adp as tp
-from .base import load_ncdata as load, save_ncdata as save
+from dolfyn.tests import test_read_adv as tv
+from dolfyn.tests import test_read_adp as tp
+from dolfyn.tests.base import load_ncdata as load, save_ncdata as save
 import dolfyn.adv.api as avm
 import dolfyn.adp.api as apm
 from xarray.testing import assert_allclose
@@ -59,7 +59,7 @@ def test_clean_upADCP(make_data=False):
     apm.clean.set_range_offset(td, 0.6)
     apm.clean.find_surface_from_P(td, salinity=31)
     td = apm.clean.nan_beyond_surface(td)
-    td = apm.clean.correlation_filter(td, thresh=70)
+    td = apm.clean.correlation_filter(td, thresh=50)
 
     if make_data:
         save(td, 'Sig1000_tidal_clean.nc')
@@ -71,10 +71,14 @@ def test_clean_upADCP(make_data=False):
 def test_clean_downADCP(make_data=False):
     td = tp.dat_sig_ie.copy(deep=True)
 
-    td = apm.clean.vel_exceeds_thresh(td, thresh=4)
-    td = apm.clean.fillgaps_time(td)
-    td = apm.clean.fillgaps_depth(td)
+    # First remove bad data
+    td['vel'] = apm.clean.val_exceeds_thresh(td.vel, thresh=3)
+    td['vel'] = apm.clean.fillgaps_time(td.vel)
+    td['vel_b5'] = apm.clean.fillgaps_time(td.vel_b5)
+    td['vel'] = apm.clean.fillgaps_depth(td.vel)
+    td['vel_b5'] = apm.clean.fillgaps_depth(td.vel_b5)
 
+    # Then clean below seabed
     apm.clean.set_range_offset(td, 0.5)
     apm.clean.find_surface(td, thresh=10, nfilt=3)
     td = apm.clean.nan_beyond_surface(td)
@@ -102,12 +106,3 @@ def test_orient_filter(make_data=False):
 
     assert_allclose(td_sig, load('Sig1000_IMU_ofilt.nc'), atol=1e-6)
     assert_allclose(td_rdi, load('RDI_test01_ofilt.nc'), atol=1e-6)
-
-
-if __name__ == '__main__':
-    test_GN2002()
-    test_spike_thresh()
-    test_range_limit()
-    test_clean_upADCP()
-    test_clean_downADCP()
-    test_orient_filter()
