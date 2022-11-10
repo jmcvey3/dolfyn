@@ -2,7 +2,7 @@ import numpy as np
 import scipy.signal as ss
 from scipy.integrate import cumtrapz
 import xarray as xr
-from ..rotate import vector as rot
+from ..rotate import vector as rot, signature as sig
 from ..rotate.api import _make_model, rotate2
 import warnings
 
@@ -11,6 +11,8 @@ def _get_body2imu(make_model):
     if make_model == 'nortek vector':
         # In inches it is: (0.25, 0.25, 5.9)
         return np.array([0.00635, 0.00635, 0.14986])
+    elif 'signature' in make_model.lower() or 'ad2cp' in make_model.lower():
+        return np.array([0.0, 0.0, 0.0])  # Need to figure this out
     else:
         raise Exception("The imu->body vector is unknown for this instrument.")
 
@@ -388,7 +390,11 @@ def correct_motion(ds,
 
     # NOTE: accel, acclow, and velacc are in the earth-frame after
     #       calc_velacc() call.
-    inst2earth = rot._inst2earth
+    if 'signature' in ds.inst_model.lower() or 'ad2cp' in ds.inst_model.lower():
+        inst2earth = sig._inst2earth
+    else:
+        inst2earth = rot._inst2earth
+
     if to_earth:
         ds['accel'].values = calcobj.accel
         to_remove = ['accel', 'acclow', 'velacc']
@@ -417,7 +423,13 @@ def correct_motion(ds,
     # use xarray to keep dimensions consistent
     velmot = ds['velrot'] + ds['velacc']
     velmot = velmot.values
-    ds['vel'][:3] += velmot
+
+    if 'signature' in ds.inst_model.lower() or 'ad2cp' in ds.inst_model.lower():
+        ds['vel'][:3] += velmot[:, None, :]
+        # This assumes last direction is a vertical measurement
+        ds['vel'][3:] += velmot[2:]
+    else:  # nortek vector
+        ds['vel'][:3] += velmot
 
     ds.attrs['motion corrected'] = 1
     ds.attrs['motion accel_filtfreq Hz'] = calcobj.accel_filtfreq

@@ -1,5 +1,6 @@
+import numpy as np
 from dolfyn.tests import test_read_adv as tv
-#from dolfyn.tests import test_read_adp as tp
+from dolfyn.tests import test_read_adp as tp
 from dolfyn.tests.base import load_netcdf as load, save_netcdf as save, assert_allclose, drop_config
 import dolfyn.adv.api as avm
 from dolfyn.io.api import read_example as read
@@ -64,11 +65,12 @@ def test_sep_probes(make_data=False):
     assert_allclose(tdm, load('vector_data_imu01_mcsp.nc'), atol=1e-7)
 
 
-# def test_motion_adcp():
-#     # Correction for ADCPs not completed yet
-#     tdm = tp.dat_sig_i.copy(deep=True)
-#     avm.set_inst2head_rotmat(tdm, rotmat=np.eye(4), inplace=True) # 4th doesn't matter
-#     tdm.attrs['inst2head_vec'] = np.array([0,0,0,0])
-#     tdmc = avm.correct_motion(tdm)
+def test_motion_adcp():
+    # Correction for ADCPs not completed yet
+    tdm = tp.dat_sig_i.copy(deep=True)
+    avm.set_inst2head_rotmat(tdm, rotmat=np.eye(
+        4), inplace=True)  # 4th doesn't matter
+    tdm.attrs['inst2head_vec'] = np.array([0, 0, 0, 0])
+    tdmc = avm.correct_motion(tdm)
 
-#    assert type(tdm)==type(tdmc) # simple way of making sure tdmc exists
+    assert type(tdm) == type(tdmc)  # simple way of making sure tdmc exists

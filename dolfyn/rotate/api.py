@@ -289,9 +289,6 @@ def set_inst2head_rotmat(ds, rotmat, inplace=True):
     if not inplace:
         ds = ds.copy(deep=True)
 
-    if not ds.inst_model.lower() == 'vector':
-        raise Exception("Setting 'inst2head_rotmat' is only supported "
-                        "for Nortek Vector ADVs.")
     if ds.get('inst2head_rotmat', None) is not None:
         raise Exception(
             "You are setting 'inst2head_rotmat' after it has already "
@@ -303,8 +300,8 @@ def set_inst2head_rotmat(ds, rotmat, inplace=True):
 
     ds['inst2head_rotmat'] = xr.DataArray(np.array(rotmat),
                                           dims=['x', 'x*'],
-                                          coords={'x': [1, 2, 3],
-                                                  'x*': [1, 2, 3]})
+                                          coords={'x': np.arange(np.shape(rotmat)[0])+1,
+                                                  'x*': np.arange(np.shape(rotmat)[-1])+1})
 
     ds.attrs['inst2head_rotmat_was_set'] = 1  # logical
     # Note that there is no validation that the user doesn't

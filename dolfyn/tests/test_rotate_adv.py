@@ -164,16 +164,12 @@ class warnings_testcase(unittest.TestCase):
         warn2 = tr.dat.copy(deep=True)
         warn2.attrs['coord_sys'] = 'flow'
         warn3 = tr.dat.copy(deep=True)
-        warn3.attrs['inst_model'] = 'ADV'
-        warn4 = tr.dat.copy(deep=True)
-        warn4.attrs['inst_model'] = 'adv'
 
         with self.assertRaises(Exception):
             rotate2(warn1, 'ship')
         with self.assertRaises(Exception):
             rotate2(warn2, 'earth')
         with self.assertRaises(Exception):
+            # Check that function can't be runt twice
             set_inst2head_rotmat(warn3, np.eye(3))
             set_inst2head_rotmat(warn3, np.eye(3))
-        with self.assertRaises(Exception):
-            set_inst2head_rotmat(warn4, np.eye(3))
