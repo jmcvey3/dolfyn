@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## Unversioned
+    - Bugfixes
+	    - Fixed bug that dropped shared but differing "lag" coordinate between auto-covariance
+		  and cross-covariance functions
+	    - Fix duty cycle attributes for some Nortek instruments
+		- Fix bug where 'accel' variable was rotated incorrected in `correct_motion`
+	
+	- API/Useability
+		- Add 'fill_nan_ensemble_mean' function to ADV cleaning methods
+		- Spectra frequency coordinate name is set to 'freq', whether using radial (rad/s) or
+		  classical (Hz) frequency units instead of 'omega' and 'f', respectively
+	    - `correct_motion` filtering updated for duty cycled ADVs
+	    - `CalcMotion` class is changed from private to public
+
 ## Version 1.1.0
     - Bugfixes
 	    - "calc_tke" function now errors if given multi-beam ADCP velocity vector

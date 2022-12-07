@@ -1,9 +1,11 @@
-import numpy as np
-from dolfyn.tests import test_read_adv as tv
-from dolfyn.tests import test_read_adp as tp
-from dolfyn.tests.base import load_netcdf as load, save_netcdf as save, assert_allclose, drop_config
-import dolfyn.adv.api as avm
 from dolfyn.io.api import read_example as read
+import dolfyn.adv.api as avm
+from dolfyn.tests.base import load_netcdf as load, save_netcdf as save, assert_allclose, drop_config
+from dolfyn.tests import test_read_adp as tp
+from dolfyn.tests import test_read_adv as tv
+from dolfyn.adv.motion import correct_motion
+import xarray as xr
+import numpy as np
 
 
 def test_motion_adv(make_data=False):
@@ -65,6 +67,32 @@ def test_sep_probes(make_data=False):
     assert_allclose(tdm, load('vector_data_imu01_mcsp.nc'), atol=1e-7)
 
 
+def test_duty_cycle():
+    tdc = load('vector_duty_cycle.nc')
+    tdc.velds.set_inst2head_rotmat(np.eye(3))
+    tdc.attrs['inst2head_vec'] = [0.5, 0, 0.1]
+
+    # with duty cycle code
+    td = correct_motion(tdc, accel_filtfreq=0.03, to_earth=False)
+    td_ENU = correct_motion(tdc, accel_filtfreq=0.03, to_earth=True)
+
+    # Wrapped function
+    n_burst = 50
+    n_ensembles = len(tdc.time)//n_burst
+    cd = xr.Dataset()
+    tdc.attrs.pop('duty_cycle_n_burst')
+    for i in range(n_ensembles):
+        cd0 = tdc.isel(time=slice(n_burst*i, n_burst*i+n_burst))
+        cd0 = correct_motion(cd0, accel_filtfreq=0.03, to_earth=False)
+        cd = xr.merge((cd, cd0), combine_attrs='no_conflicts')
+    cd.attrs['duty_cycle_n_burst'] = n_burst
+
+    cd_ENU = cd.velds.rotate2('earth', inplace=False)
+
+    assert_allclose(td, cd, atol=1e-7)
+    assert_allclose(td_ENU, cd_ENU, atol=1e-7)
+
+
 def test_motion_adcp():
     # Correction for ADCPs not completed yet
     tdm = tp.dat_sig_i.copy(deep=True)
@@ -72,5 +100,4 @@ def test_motion_adcp():
         4), inplace=True)  # 4th doesn't matter
     tdm.attrs['inst2head_vec'] = np.array([0, 0, 0, 0])
     tdmc = avm.correct_motion(tdm)
-
     assert type(tdm) == type(tdmc)  # simple way of making sure tdmc exists
