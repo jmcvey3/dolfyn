@@ -3,7 +3,7 @@ import xarray as xr
 import warnings
 import scipy.signal as ss
 from scipy.integrate import cumtrapz
-import xarray as xr
+
 from ..rotate import vector as rot, signature as sig
 from ..rotate.api import _make_model, rotate2
 
@@ -264,7 +264,7 @@ def _calc_probe_pos(ds, separate_probes=False):
       instrument frame of reference
 
     """
-    vec = ds.inst2head_vec
+    vec = getattr(ds, 'inst2head_vec',  np.array([0., 0., 0.]))
     if type(vec) != np.ndarray:
         vec = np.array(vec)
 
@@ -490,7 +490,8 @@ def correct_motion(ds,
     if 'signature' in ds.inst_model.lower() or 'ad2cp' in ds.inst_model.lower():
         ds['vel'][:3] += velmot[:, None, :]
         # This assumes last direction is a vertical measurement
-        ds['vel'][3:] += velmot[2:]
+        ds['vel'][-1] += velmot[-1]
+        ds['vel_b5'] += velmot[-1]
     else:  # nortek vector
         ds['vel'][:3] += velmot
 
