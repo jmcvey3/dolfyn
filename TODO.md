@@ -60,4 +60,3 @@ What about dropping data from averaging? Is this something we should support? Vi
 
 ADCPs:
   - Support for calculating principal heading by ensemble?
-  - Support for motion-correcting ADCP data
