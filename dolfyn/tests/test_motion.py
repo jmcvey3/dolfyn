@@ -3,7 +3,7 @@ import dolfyn.adv.api as avm
 from dolfyn.tests.base import load_netcdf as load, save_netcdf as save, assert_allclose, drop_config
 from dolfyn.tests import test_read_adp as tp
 from dolfyn.tests import test_read_adv as tv
-from dolfyn.adv.motion import correct_motion
+from dolfyn.motion import correct_motion
 import xarray as xr
 import numpy as np
 
@@ -93,9 +93,13 @@ def test_duty_cycle():
     assert_allclose(td_ENU, cd_ENU, atol=1e-7)
 
 
-def test_motion_adcp():
+def test_motion_adcp(make_data=False):
     # Correction for ADCPs not completed yet
     tdm = tp.dat_sig_i.copy(deep=True)
     tdmc = avm.correct_motion(tdm)
 
-    assert type(tdm) == type(tdmc)  # simple way of making sure tdmc exists
+    if make_data:
+        save(tdmc, 'Sig1000_IMU_mc.nc')
+        return
+
+    assert_allclose(tdmc, load('Sig1000_IMU_mc.nc'), atol=1e-7)

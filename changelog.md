@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## Unversioned
     - API/Useability
-	    - Add ADCP motion correction
+	    - Add ability to motion correct Nortek ADCPs equipped with AHRS's
+		- `correct_motion` now callable from dolfyn import and dolfyn.adp.api
 
 ## Version 1.2.0
     - Bugfixes

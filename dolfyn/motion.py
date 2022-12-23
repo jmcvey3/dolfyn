@@ -4,16 +4,23 @@ import warnings
 import scipy.signal as ss
 from scipy.integrate import cumtrapz
 
-from ..rotate import vector as rot, signature as sig
-from ..rotate.api import _make_model, rotate2
+from .rotate import vector as rot, signature as sig
+from .rotate.api import _make_model, rotate2
 
 
 def _get_body2imu(make_model):
-    if make_model == 'nortek vector':
-        # In inches it is: (0.25, 0.25, 5.9)
-        return np.array([0.00635, 0.00635, 0.14986])
-    elif 'signature' in make_model.lower() or 'ad2cp' in make_model.lower():
-        return np.array([0.0, 0.0, 0.0])  # Need to figure this out
+    body2imu = {'nortek vector': np.array([0.00635, 0.00635, 0.14986]),  # In inches it is: (0.25, 0.25, 5.9)
+                'nortek signature1000': np.array([0, 0, 0.086]),
+                'nortek ad2cp': np.array([0, 0, 0.086]),
+                'nortek signature500': np.array([0, 0, 0.129]),
+                'nortek signature250': np.array([0, 0, 0.300]),
+                'nortek signature100': np.array([0, 0, 0.338]),
+                # 'nortek signature100': np.array([0, 0, 0.308]), # 6000 m version
+                'nortek signature55': np.array([0, 0, 0.521]),
+                }
+
+    if make_model in body2imu:
+        return body2imu[make_model]
     else:
         raise Exception("The imu->body vector is unknown for this instrument.")
 
