@@ -94,12 +94,12 @@ def test_duty_cycle():
 
 
 def test_motion_adcp(make_data=False):
-    # Correction for ADCPs not completed yet
     tdm = tp.dat_sig_i.copy(deep=True)
     tdmc = avm.correct_motion(tdm)
 
     if make_data:
         save(tdmc, 'Sig1000_IMU_mc.nc')
         return
+    cdmc = load('Sig1000_IMU_mc.nc')
 
-    assert_allclose(tdmc, load('Sig1000_IMU_mc.nc'), atol=1e-7)
+    assert_allclose(tdmc, cdmc, atol=1e-7)

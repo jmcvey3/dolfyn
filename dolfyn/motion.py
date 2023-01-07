@@ -460,7 +460,7 @@ def correct_motion(ds,
 
     # NOTE: accel, acclow, and velacc are in the earth-frame after
     #       calc_velacc() call.
-    if 'signature' in ds.inst_model.lower() or 'ad2cp' in ds.inst_model.lower():
+    if 'signature' in _make_model(ds) or 'ad2cp' in _make_model(ds):
         inst2earth = sig._inst2earth
     else:
         inst2earth = rot._inst2earth
@@ -480,8 +480,8 @@ def correct_motion(ds,
 
     ##########
     # Copy vel -> velraw prior to motion correction:
-    ds['vel_raw'] = xr.DataArray(ds.vel.copy(
-        deep=True), dims=ds.vel.dims).astype('float32')
+    ds['vel_raw'] = xr.DataArray(ds['vel'].copy(
+        deep=True), dims=ds['vel'].dims).astype('float32')
     # Add it to rotate_vars:
     ds.attrs['rotate_vars'].append('vel_raw')
 
@@ -494,15 +494,20 @@ def correct_motion(ds,
 
     # use xarray to keep dimensions consistent
     velmot = ds['velrot'] + ds['velacc']
-    velmot = velmot.values
+    velmot = velmot.rename(dirIMU='dir')
 
-    if 'signature' in ds.inst_model.lower() or 'ad2cp' in ds.inst_model.lower():
-        ds['vel'][:3] += velmot[:, None, :]
-        # This assumes last direction is a vertical measurement
-        ds['vel'][-1] += velmot[-1]
-        ds['vel_b5'] += velmot[-1]
+    if 'signature' in _make_model(ds) or 'ad2cp' in _make_model(ds):
+        ds['vel_raw_b5'] = xr.DataArray(ds['vel_b5'].copy(
+            deep=True), dims=ds['vel_b5'].dims).astype('float32')
+            
+        ds['vel'][:2] += velmot[:2]  # Add X, Y
+        # Manually add Z
+        ds['vel'][-2].data += velmot[-1].data  # Z1
+        ds['vel'][-1].data += velmot[-1].data  # Z2
+        ds['vel_b5'] += velmot.interp(time=ds['time_b5'],
+                                      kwargs={'fill_value': 'extrapolate'})[-1]
     else:  # nortek vector
-        ds['vel'][:3] += velmot
+        ds['vel'] += velmot
 
     ds.attrs['motion corrected'] = 1
     ds.attrs['motion accel_filtfreq Hz'] = calcobj.accel_filtfreq
