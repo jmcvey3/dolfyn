@@ -71,7 +71,7 @@ class ADPBinner(VelBinner):
         sign = 1
         if orientation == 'down':
             sign *= -1
-            
+
         if self.diff_style == 'first':
             out = _diffz_first(vel[u].values, vel['range'].values)
             return sign*out, vel.range[1:]
@@ -79,7 +79,7 @@ class ADPBinner(VelBinner):
         elif self.diff_style == 'centered':
             out = _diffz_centered(vel[u].values, vel['range'].values)
             return sign*out, vel.range[1:-1]
-          
+
         elif self.diff_style == 'centered_extended':
             out = _diffz_centered_extended(vel[u].values, vel['range'].values)
             return sign*out, vel.range
@@ -116,6 +116,8 @@ class ADPBinner(VelBinner):
         ----------
         vel : xarray.DataArray
           ADCP raw velocity
+        orientation : str, default=ADPBinner.orientation
+          Direction ADCP is facing ('up' or 'down')
 
         Notes
         -----
@@ -139,6 +141,8 @@ class ADPBinner(VelBinner):
         ----------
         vel : xarray.DataArray
           ADCP raw velocity
+        orientation : str, default=ADPBinner.orientation
+          Direction ADCP is facing ('up' or 'down')
 
         Notes
         -----
